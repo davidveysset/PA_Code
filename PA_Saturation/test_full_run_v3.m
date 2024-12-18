@@ -58,6 +58,7 @@ wavelengths = [780,1030];
 recon_data_780_1030 = recon_noise_holder;
 [C_nnls, hbo_C, hb_C, sum_C, hbo_S, hb_S, circle_concentration, saturation_error,saturation_error_hb, w_avg] = calc_error_saturation_v3(recon_data_780_1030, E, wavelengths, expected_values, plot_hbo, plot_hb, plot_analysis);
 data_780_1030 = {C_nnls, hbo_C, hb_C, sum_C, hbo_S, hb_S, circle_concentration, saturation_error,saturation_error_hb, w_avg};
+
 %Returns the Concentrations calculated with non-negative least squares
 % C_nnls = (noise level, concentration,type, x, y)
 % Concentration of hbO: hbo_C = (noise level, concentration, x, y)

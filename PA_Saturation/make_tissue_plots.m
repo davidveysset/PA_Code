@@ -43,7 +43,7 @@ for w = 1:num_wavelength
 end
 
 figure;
-subplot(1,2,1)a
+subplot(1,2,1)
 imagesc(hb_S)
 title('Hb Saturation')
 colormap;
