@@ -1,9 +1,9 @@
 README TODO:
 Look at Cote Lab Ex
 
-Project Title: PhotoAcoustic Simulations
-Picture: ...
-Brief Summary:
+<h1 align = 'center'>Project Title: PhotoAcoustic Simulations </h1>
+Picture: 
+### Summary:
 
 Notable Features:
 
@@ -20,3 +20,5 @@ Features:
 Examples:
 
 Acknowledgements
+
+
