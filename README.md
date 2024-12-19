@@ -3,7 +3,7 @@ Look at Cote Lab Ex
 
 <h1 align = 'center'> Photo-Acoustic Simulations of Hb and HbO Saturations in Tissue </h1>
 <p align="center">
- <img src="/README_images/saturation_picture.png" width="600" height="400">
+ <img src="/README_images/collage.png" width="600" height="400">
 </p>
 
 
