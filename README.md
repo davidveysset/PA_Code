@@ -1,17 +1,14 @@
-README TODO:
-Look at Cote Lab Ex
-
-<h1 align = 'center'> Photo-Acoustic Simulations of Hb and HbO Saturations in Tissue </h1>
+<h1 align = 'center'> Photo-Acoustic Tissue Saturation Simulation </h1>
 <p align="center">
  <img src="/README_images/collage.png" width="600" height="400">
 </p>
 
 
 ## Summary: 
-This folder contains all the code necessary to run spectral unmixing for Oxygenated and Deoxygenated Hemoglobin for arbitrary tissue shape. Starting by generating arbitrary tissue shape in 2D(width, and depth), it simulates the acoustic pressure waves generated from the a laser given an input set of wavelengths. It then reconstructs the tissue from the simulated sensor data. All wave simulation is generated using k-wave. Spectral Unmixing is performed on the recovered pressures to produce maps of the Hb, HbO concentration and saturation. Additional inputs can be added such as noise and multiple iterations. This will generate error bars to characterize the performance of the reconstruction and spectral unmixing for different wavelengths. Note: these simulations can take many minutes to hours depending on how many iterations.
+This folder contains all the code necessary to run spectral unmixing for multiple types of molecules for arbitrary tissue shape in 2D. Starting by generating arbitrary tissue shape in 2D(width, and depth), it simulates the acoustic pressure waves generated from the a laser given an input set of wavelengths. The algorithm then reconstructs the tissue from the simulated sensor data. All pressue wave simulation is generated using k-wave. Spectral Unmixing is performed on the recovered pressures to produce maps of the molecule type concentration and saturation. Additional inputs can be added such as noise and multiple iterations. This will generate error bars to characterize the performance of the reconstruction and spectral unmixing for different wavelengths. Examples are included for simulation, unmixing, and analysis of Oxygenated and De-Oxygenated Hemoglobin in tissue. Note: these simulations can take many minutes to hours depending on how many iterations.
 
 ## Notable Features:
-- Customizeable Tissue Shape with options for set shapes like circles
+- Customizeable shape with options for set shapes like circles, and generated tissue
 - Generates sensor data and reconstruction with K-Wave(faster than DAS)
 - Spectral Unmixing for many wavelengths at once
 - Generalizes for any wavelength, molecule type
@@ -206,6 +203,40 @@ a_plot_flag_diff = true;
 [full_specunmix_analysis_data] = specunmix_analysis(full_specunmix_data, mask, wavelength_sets, concentrations, noise_simple, type_names, Nx ,Ny, ...
     a_save_flag, num_iter, folder_path, a_plot_flag_c, a_plot_flag_s, a_plot_flag_w_avg, a_plot_flag_diff);
 ```
+Here are some pictures of the step by step process for a simple one circle:
+### Original Simulated Tissue Pressure
+<p align="center">
+ <img src="/README_images/clean_sensor_data.png" width="600" height="400">
+</p>
+
+### Clean Sensor Data
+<p align="center">
+ <img src="/README_images/clean_sensor_data.png" width="600" height="400">
+</p>
+
+### Noisy Sensor Data
+<p align="center">
+ <img src="/README_images/noisy_sensor_data.png" width="600" height="400">
+</p>
+
+### Noisy Reconstructed Pressure
+<p align="center">
+ <img src="/README_images/noisy_recon_sensor_data.png" width="600" height="400">
+</p>
+
+### Unmixed Saturation Plots
+Here is the saturation and a collage of concentration and saturation
+<p align="center">
+ <img src="/README_images/saturation_picture.png" width="600" height="400">
+</p>
+<p align="center">
+ <img src="/README_images/combo_pic.png" width="600" height="400">
+</p>
+
+### Calculated Error Bars
+<p align="center">
+ <img src="/README_images/error_bars.png" width="600" height="400">
+</p>
 
 ## Acknowledgements
 Special thanks to David Veysset for mentoring me through this process. Thank you to Bhaskara Rao Chintada as well for help with the delay and sum algorithm.
