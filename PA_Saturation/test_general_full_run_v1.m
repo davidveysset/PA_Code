@@ -49,27 +49,29 @@ mask = zeros(Nx,Ny);
 %Pressure maks is of size(num_concentrations, num_wavelength, # x pixels, # y pixels)
 pressure_mask = convert_mask_to_pressure(mask,epsilon, concentrations, Nx, Ny);
 
-sensor_data_holder = zeros(num_wavelength, Nx, Ny);
+sensor_data_holder = zeros(num_wavelength, num_concentrations, Nx, Ny);
 
 noisy_sensor_data_holder = zeros(num_noise,num_wavelength, Nx, Ny);
 
 
 for n= 1:num_noise
     for w = 1:num_wavelength
-    
-    p_mask = squeeze(pressure_mask(w, c, :));
+        for c=1:num_concentrations
 
-    sensor_data = calculate_sensor_data_for_mask(p_mask, Nx, dx, Ny, dy);
-    if n== 1
-        sensor_data_holder(w,:,:) = sensor_data;
-    end
+            p_mask = squeeze(pressure_mask(w, c, :));
 
-    noise = noises(n);
-    noise_map = noise*randn(Nx,Ny);
-   
-    noisy_sensor_data = sensor_data + noise_map*noise_strength;
-    noisy_sensor_data_holder(n,w,:,:) = noisy_sensor_data;
+            sensor_data = calculate_sensor_data_for_mask(p_mask, Nx, dx, Ny, dy);
+            if n== 1
+                sensor_data_holder(w,c,:,:) = sensor_data;
+            end
 
+            noise = noises(n);
+            noise_map = noise*randn(Nx,Ny);
+
+            noisy_sensor_data = sensor_data + noise_map*noise_strength;
+            noisy_sensor_data_holder(n,w,:,:) = noisy_sensor_data;
+
+        end
     end
 end
 
@@ -106,22 +108,3 @@ end
 
 
 
-
-
-
-% Plot results
-figure;
-hold on;
-colors = lines(num_wavelength); % Generate distinct colors for each wavelength
-wavelength_names = {'770-780', '750-850', '780-1030', '750-770-780-850'}; % Updated namesy
-for w = 1:num_wavelength
-    plot(noises, w_avg_holder(w,:, 1), '-o', 'Color', colors(w, :), ...
-        'DisplayName', wavelength_names{w});
-end
-
-xlabel('Noise Level');
-ylabel('HBO Weighted Average');
-title('HBO Weighted Average vs. Noise Level for Different Wavelengths');
-legend('show');
-grid on;
-hold off;
