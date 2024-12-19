@@ -1,4 +1,4 @@
-<h1 align = 'center'> Photo-Acoustic Tissue Saturation Simulation </h1>
+<h1 align = 'center'> Photo-Acoustic Simulation of Hb and HbO in Tissue </h1>
 <p align="center">
  <img src="/README_images/collage.png" width="600" height="400">
 </p>
