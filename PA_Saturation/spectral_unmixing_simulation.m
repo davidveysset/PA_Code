@@ -203,7 +203,7 @@ end
 
 
 if save_flag
-    rand_id = num2str(rand(0,1000));
+    rand_id = num2str(round(1000*rand(1)));
     timestamp = datestr(datetime('now'), 'yyyymmdd');
     timestamp = [timestamp,'_', rand_id];
     wavelength_name = '';
