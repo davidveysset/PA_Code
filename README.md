@@ -1,8 +1,7 @@
-<h1 align = 'center'> Photo-Acoustic Simulation of Hb and HbO in Tissue </h1>
+<h1 align = 'center'> Photo-Acoustic Simulation of Tissue in 2D </h1>
 <p align="center">
- <img src="/README_images/collage.png" width="600" height="400">
+ <img src="/README_images/collage_v2.png" width="600" height="400">
 </p>
-
 
 ## Summary: 
 This folder contains all the code necessary to run spectral unmixing for multiple types of molecules for arbitrary tissue shape in 2D. Starting by generating arbitrary tissue shape in 2D(width, and depth), it simulates the acoustic pressure waves generated from the a laser given an input set of wavelengths. The algorithm then reconstructs the tissue from the simulated sensor data. All pressue wave simulation is generated using k-wave. Spectral Unmixing is performed on the recovered pressures to produce maps of the molecule type concentration and saturation. Additional inputs can be added such as noise and multiple iterations. This will generate error bars to characterize the performance of the reconstruction and spectral unmixing for different wavelengths. Examples are included for simulation, unmixing, and analysis of Oxygenated and De-Oxygenated Hemoglobin in tissue. Note: these simulations can take many minutes to hours depending on how many iterations.
@@ -17,7 +16,8 @@ This folder contains all the code necessary to run spectral unmixing for multipl
 - Simulate arbitrary iterations of different concentrations
 - Organizes results into easy to access data files
 ## Table of Contents:
-
+- [Installation](#installation)
+- [Examples](#examples)
 ## Installations:
 ### Requirements
 - Matlab 2024b
@@ -27,6 +27,10 @@ Need to go to K-Wave website and make an account to download. Make sure that the
 - Find 'SetPath' button in toolbar
 - Add the Path to the K-Wave toolbox and Save
 ## Getting Started:
+To get started all the code to run the simulations is in the folder Simulation. From there feel free to use the examples in the folder Examples as a jumping off point. 
+I'll briefly explain how to build the simulation specification. 
+**IMPORTANT**: Make sure to add the Simulation Folder to your path if you are running the examples
+
 ### Define tissue dimensions
 ```Matlab
 Ny = 200; % Number of Pixels in X-Dir
@@ -233,13 +237,43 @@ Here is the saturation and a collage of concentration and saturation
  <img src="/README_images/combo_pic.png" width="600" height="400">
 </p>
 
-### Calculated Error Bars
+### Saturation for Different Noise Levels
+<p align="center">
+  <img src="/README_images/noise=15.png" width="600" height="400">
+  <img src="/README_images/noise=3.png" width="600" height="400">
+  <img src="/README_images/noise=1.5_v2.png" width="600" height="400">
+</p>
+
+### Analysis Plots
+Concentration Plot:
+<p align="center">
+ <img src="/README_images/concentration_result.png" width="600" height="400">
+</p>
+
+Saturation Plot:
+<p align="center">
+ <img src="/README_images/saturation_result.png" width="600" height="400">
+</p>
+
+Difference between Saturation Mean and the Expected Saturation Plot:
+<p align="center">
+ <img src="/README_images/sat_difference.png" width="600" height="400">
+</p>
+
+Weighted Average Plot:
+<p align="center">
+ <img src="/README_images/w_avg.png" width="600" height="400">
+</p>
+
+Saturation w/Error Bars for a Large Run - 100 Iterations 4 Wavelength Sets:
 <p align="center">
  <img src="/README_images/error_bars.png" width="600" height="400">
 </p>
 
+
 ## Acknowledgements
 Special thanks to David Veysset for mentoring me through this process. Thank you to Bhaskara Rao Chintada as well for help with the delay and sum algorithm.
+Thank you to the Bouma Lab for supporting me for the past few months!
 
 
 
