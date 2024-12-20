@@ -27,6 +27,10 @@ Need to go to K-Wave website and make an account to download. Make sure that the
 - Find 'SetPath' button in toolbar
 - Add the Path to the K-Wave toolbox and Save
 ## Getting Started:
+To get started all the code to run the simulations is in the folder Simulation. From there feel free to use the examples in the folder Examples as a jumping off point. 
+I'll briefly explain how to build the simulation specification. 
+**IMPORTANT**: Make sure to add the Simulation Folder to your path if you are running the examples
+
 ### Define tissue dimensions
 ```Matlab
 Ny = 200; % Number of Pixels in X-Dir
