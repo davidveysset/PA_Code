@@ -1,6 +1,6 @@
 <h1 align = 'center'> Photo-Acoustic Simulation of Tissue in 2D </h1>
 <p align="center">
- <img src="/README_images/collage.png" width="600" height="400">
+ <img src="/README_images/collage_v2.png" width="600" height="400">
 </p>
 
 ## Summary: 
