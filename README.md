@@ -3,7 +3,6 @@
  <img src="/README_images/collage.png" width="600" height="400">
 </p>
 
-
 ## Summary: 
 This folder contains all the code necessary to run spectral unmixing for multiple types of molecules for arbitrary tissue shape in 2D. Starting by generating arbitrary tissue shape in 2D(width, and depth), it simulates the acoustic pressure waves generated from the a laser given an input set of wavelengths. The algorithm then reconstructs the tissue from the simulated sensor data. All pressue wave simulation is generated using k-wave. Spectral Unmixing is performed on the recovered pressures to produce maps of the molecule type concentration and saturation. Additional inputs can be added such as noise and multiple iterations. This will generate error bars to characterize the performance of the reconstruction and spectral unmixing for different wavelengths. Examples are included for simulation, unmixing, and analysis of Oxygenated and De-Oxygenated Hemoglobin in tissue. Note: these simulations can take many minutes to hours depending on how many iterations.
 
@@ -17,7 +16,8 @@ This folder contains all the code necessary to run spectral unmixing for multipl
 - Simulate arbitrary iterations of different concentrations
 - Organizes results into easy to access data files
 ## Table of Contents:
-
+- [Installation](#installation)
+- [Examples](#examples)
 ## Installations:
 ### Requirements
 - Matlab 2024b
@@ -233,10 +233,15 @@ Here is the saturation and a collage of concentration and saturation
  <img src="/README_images/combo_pic.png" width="600" height="400">
 </p>
 
-### Calculated Error Bars
+### Analysis Plots
+
 <p align="center">
  <img src="/README_images/error_bars.png" width="600" height="400">
 </p>
+<p align="center">
+ <img src="/README_images/error_bars.png" width="600" height="400">
+</p>
+
 
 ## Acknowledgements
 Special thanks to David Veysset for mentoring me through this process. Thank you to Bhaskara Rao Chintada as well for help with the delay and sum algorithm.
