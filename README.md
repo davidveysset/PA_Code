@@ -26,6 +26,13 @@ Need to go to K-Wave website and make an account to download. Make sure that the
 - Go to Home on Matlab
 - Find 'SetPath' button in toolbar
 - Add the Path to the K-Wave toolbox and Save
+## DOxygen Documentation
+For more thorough documentation there is a generated wiki genreate through DOxygen. Open Docs/html/index.html and search functions. 
+<p align="center">
+ <img src="/README_images/Doxygen_picture.png" width="1000" height="400">
+</p>
+
+
 ## Getting Started:
 To get started all the code to run the simulations is in the folder Simulation. From there feel free to use the examples in the folder Examples as a jumping off point. 
 I'll briefly explain how to build the simulation specification. 
