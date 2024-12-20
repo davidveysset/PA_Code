@@ -1,4 +1,4 @@
-<h1 align = 'center'> Photo-Acoustic Simulation of Hb and HbO in Tissue </h1>
+<h1 align = 'center'> Photo-Acoustic Simulation of Tissue in 2D </h1>
 <p align="center">
  <img src="/README_images/collage.png" width="600" height="400">
 </p>
@@ -233,11 +233,35 @@ Here is the saturation and a collage of concentration and saturation
  <img src="/README_images/combo_pic.png" width="600" height="400">
 </p>
 
-### Analysis Plots
-
+### Saturation for Different Noise Levels
 <p align="center">
- <img src="/README_images/error_bars.png" width="600" height="400">
+  <img src="/README_images/noise=15.png" width="600" height="400">
+  <img src="/README_images/noise=3.png" width="600" height="400">
+  <img src="/README_images/noise=1.5_v2.png" width="600" height="400">
 </p>
+
+### Analysis Plots
+Concentration Plot:
+<p align="center">
+ <img src="/README_images/concentration_result.png" width="600" height="400">
+</p>
+
+Saturation Plot:
+<p align="center">
+ <img src="/README_images/saturation_result.png" width="600" height="400">
+</p>
+
+Difference between Saturation Mean and the Expected Saturation Plot:
+<p align="center">
+ <img src="/README_images/sat_difference.png" width="600" height="400">
+</p>
+
+Weighted Average Plot:
+<p align="center">
+ <img src="/README_images/w_avg.png" width="600" height="400">
+</p>
+
+Saturation w/Error Bars for a Large Run - 100 Iterations 4 Wavelength Sets:
 <p align="center">
  <img src="/README_images/error_bars.png" width="600" height="400">
 </p>
@@ -245,6 +269,7 @@ Here is the saturation and a collage of concentration and saturation
 
 ## Acknowledgements
 Special thanks to David Veysset for mentoring me through this process. Thank you to Bhaskara Rao Chintada as well for help with the delay and sum algorithm.
+Thank you to the Bouma Lab for supporting me for the past few months!
 
 
 
