@@ -1,9 +1,25 @@
 function [pressure_mask] = convert_mask_to_pressure(mask, epsilon, concentrations, concentration_names, wavelengths, Nx, Ny, plot_flag)
+% DESCRIPTION:
+% Converts boolean mask, concentrations set, and the absorption coefficient
+% matrix into pressure masks that will be converted in to sensor data. 
+% Calculate pressure using P(w, x, y) = Epsilon(w, t) * C(type, x, y). 
+% P = Pressure, Epsilon = Absorption Coefficients by wavelength and type, C = Concentration
+%
+% INPUTS:
+% mask  -  a boolean mask of size(Nx, Ny) that is the shape of the tissue to simulate 
+% epsilon - a (num_wavelength, num_types) matrix of the absorption coefficients. must be in order that the types are specified in concentrations
+% wavelengths - 1D array of the wavelengths, ex:[770,780], this must be the same size as epsilon
+% concentrations - an array of size (unique_c*num_iter, num_types).concentrations defines the relative saturations of each type in the generated pressure mask
+% type_names - a "CELL" array of names, ex : {'Hb', 'HbO'}. The order is important must match with epsilon and concentrations
+% Nx - Number of X Pixels
+% Ny - Number of Y Pixels
+% plotflag -  boolean, if true, plots each pressure mask for all num_concentrations and wavelengths. Only use for testing when num_iter = 1!
+%
+% OUTPUTS:
+% pressure_mask = calculates the pressure using P(w,x,y) = epsilon(w,t) * C(t,x,y)
+% This is used for calculating the sensor data
 
-%Inputs
-%Set of concentrations
-%Epsilon where num_concentrations= length of concentrations
-%Must ensure that epsilon and the concentrations are in the same order
+
 
 num_concentrations = size(concentrations,1);
 num_type = size(concentrations,2);

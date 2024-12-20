@@ -1,26 +1,47 @@
 function [full_specunmix_analysis_data] = specunmix_analysis(specunmix_data, mask, wavelength_sets, concentrations, noise_simple, type_names, Nx ,Ny, ...
     save_flag, num_iter, folder_path, plot_flag_c, plot_flag_s, plot_flag_w_avg, plot_flag_diff)
-% analysis functions:
-
-% input takes a set of specunmix_c_data from the different wavelengths =
-%{specunmix_c_data_770_780, specunmix_c_data_750_850}
-% also takes a set of wavelengths = [wavelengths_770_780, wavelengths_750_850]
-% also takes concentrations as the expected values.
-% also takes noises to calculate the Signal Strength
-
-% each specunmix_c_data is
-% cell array of (num_noise, num_concentration(iter))
-% each cell has an array of {sum_C, saturations_by_type,
-% concentrations_by_type, w_avg_by_type}
-% each of them is (num_type, Nx, Ny)
-
-% for each concentration(/num_iter) plot the saturation and then calculate the
-% error bar for the different noise levels and for all the wavelengths.
-% The error bar must be calculated using num_iterations.
-% The other thing is that you must take the saturation over the mask.
-
-% w_avg is just a number so slightly easier. same thing...
-
+% DESCRIPTION:
+% Takes a combination of full data(saturations, concentrations, w_avg) from
+% different wavelength sets and combines them to do analysis. Has a few
+% main features:
+% - Plots the mean saturation and concentration values with error bars.
+% Calculates the mean and standard deviation saturation by averaging over the
+% masked values. Not the whole thing due to lack of spatial accuracy with
+% saturation calculation.
+% Different lines for each wavelength, and the x-axis is noise level and
+% the y-axis is the measured quantity. Each noise level and unique
+% concentration is a different figure. 
+% - Similarly does the same thing with Weighted Average
+% - Calculates the difference and plots a bar plot for the difference
+% between the mean saturation value and the concentration
+% 
+% INPUT:
+% specunmix_data - cell array of of specunmix_noise_c_data for the however
+% many wavelengths are being used. reminder: specunmix_noise_c_data has
+% shape {n,c,4} -> for each (n,c) - {sum_C, saturations_by_type, concentrations_by_type, w_avg_by_type}
+% mask - boolean tissue mask with shape(Nx, Ny) 
+% wavelength_sets - array that is concatenated wavelengths ex: [750,850;770, 780];
+% concentrations - an array of size (unique_c*num_iter, num_types).concentrations defines the relative saturations of each type in the generated pressure mask
+% noise_simple - combined noise_levels*noise_strength
+% type_names - a "CELL" array of names, ex : {'Hb', 'HbO'}. The order is important must match with epsilon and concentrations
+% Nx - Number of X Pixels
+% Ny - Number of Y Pixels
+% save_flag - whether to save full_specunmix_analysis_data =  {saturation_mean_holder, saturation_std_holder, 
+% concentration_mean_holder, concentration_std_holder, w_avg_mean_holder, w_avg_std_holder, sat_difference_holder};
+% num_iter - number of iterations for each unique concentration
+% folder_path - folder path for saved analysis files
+% plot_flag_c - plots a new figure for each type and unique concentration. Each plot has the mean concentrations with error bars for different wavelengths
+% plot_flag_s - plots a new figure for each type and unique concentration. Each plot has the mean saturations with error bars for different wavelengths
+% plot_flag_w_avg - plots a new figure for each type and unique concentration. Each plot has the mean w_avg with error bars for different wavelengths
+% plot_flag_diff - plots a new figure for each type and unique concentration. Each plot has bar plot with the expected difference for different wavelengths
+%
+% 
+% OUTPUT:
+% full_specunmix_analysis_data - {saturation_mean_holder, saturation_std_holder, 
+% concentration_mean_holder, concentration_std_holder, w_avg_mean_holder,
+% w_avg_std_holder, sat_difference_holder}, contains all the useful data
+% needed to recreate the plots.
+% 
 if nargin <1 
    data_770_780 = load('/Users/calvinsmith/Bouma_lab/PA_project/PA_Saturation/PA_saturation_data/spectral_unmixing_data_770780_20241219_.mat');
    data_750_850 = load('/Users/calvinsmith/Bouma_lab/PA_project/PA_Saturation/PA_saturation_data/spectral_unmixing_data_750850_20241219_.mat');
@@ -85,12 +106,13 @@ if nargin < 15
     plot_flag_diff = true;
 end
 
-
+% Calculate Constants from data
 num_wavelength_sets = length(specunmix_data);
 num_type = size(concentrations,2);
 num_concentration = size(concentrations,1);
 num_noise = length(noise_simple);
 
+%Calculate # of non-zero mask points
 mask_num = 0;
 for x = 1:Nx
     for y = 1:Ny
@@ -100,10 +122,12 @@ for x = 1:Nx
     end
 end
 
+%Initialize data holders
 saturation_avg_holder = zeros(num_wavelength_sets, num_type,num_noise, num_concentration, num_type);
 concentration_avg_holder = zeros(num_wavelength_sets, num_type,num_noise, num_concentration, num_type);
 w_avg_holder = zeros(num_wavelength_sets, num_type,num_noise, num_concentration, num_type);
 
+%Loop through the combinations and organize the saturations
 for w = 1:num_wavelength_sets
     for n = 1:num_noise
         for c= 1:num_concentration
@@ -120,6 +144,7 @@ for w = 1:num_wavelength_sets
 end
 
 
+%Loop through the combinations and organize the concentrations
 for w = 1:num_wavelength_sets
     for n = 1:num_noise
         for c= 1:num_concentration
@@ -136,6 +161,7 @@ for w = 1:num_wavelength_sets
 end
 
 
+%Loop through the combinations and organize the w_avg 
 for w = 1:num_wavelength_sets
     for n = 1:num_noise
         for c= 1:num_concentration
@@ -148,7 +174,7 @@ for w = 1:num_wavelength_sets
     end
 end
 
-
+% Initailize the mean and std holders 
 num_c_unique = num_concentration/num_iter;
 
 saturation_mean_holder = zeros(num_wavelength_sets, num_noise, num_c_unique, num_type);
@@ -160,8 +186,12 @@ concentration_std_holder = zeros(num_wavelength_sets, num_noise, num_c_unique, n
 w_avg_mean_holder = zeros(num_wavelength_sets, num_noise, num_c_unique, num_type);
 w_avg_std_holder = zeros(num_wavelength_sets, num_noise, num_c_unique, num_type);
 
+% holds the saturation difference holder
 sat_difference_holder = size(saturation_mean_holder);
 
+% Loop through the combinations and calculate the mean, std, and difference
+% Chunks the concentrations by num_iter to calculate the mean and std. 
+% Stores the values in the data holders
 for w = 1:num_wavelength_sets
     for n = 1:num_noise
         for c= 1:num_c_unique
@@ -180,8 +210,10 @@ for w = 1:num_wavelength_sets
     end
 end
 
+%Create Save Data
 full_specunmix_analysis_data = {saturation_mean_holder, saturation_std_holder, concentration_mean_holder, concentration_std_holder, w_avg_mean_holder, w_avg_std_holder, sat_difference_holder};
 
+% Save full_specunmix_analysis_data to the folder.
 if save_flag 
     rand_id = num2str(round(1000*rand(1)));
     timestamp = datestr(datetime('now'), 'yyyymmdd');
@@ -198,10 +230,11 @@ if save_flag
 end
 
 
-%Plot the error_bars
+
 
 colors = lines(num_wavelength_sets); % Generate distinct colors for each wavelength set
 
+% Plots the saturations for each type and unique concentration
 if plot_flag_s
 for t = 1:num_type
     for c = 1:num_c_unique
@@ -228,6 +261,7 @@ for t = 1:num_type
 end
 end
 
+% Plots the concentrations for each unique concentration and type
 if plot_flag_c
 for t = 1:num_type
     for c = 1:num_c_unique
@@ -259,6 +293,7 @@ end
 
 end
 
+% Plots the w_avg for each unique concentration and type
 if plot_flag_w_avg
 for t = 1:num_type
     for c = 1:num_c_unique
@@ -291,6 +326,7 @@ for t = 1:num_type
 end
 end
 
+% Plots the difference between calculated sat_mean and the expected value for each unique concentration and type
 if plot_flag_diff
 
 for t = 1:num_type

@@ -1,8 +1,24 @@
-function sensor_data = calculate_sensor_data_for_mask(plot_map,Nx,dx,Ny,dy)
+function sensor_data = calculate_sensor_data_for_mask(pressure_mask,Nx,dx,Ny,dy)
+% DESCRIPTION:
+% K-Wave generates sensor data from the pressure mask along the x-axis with a linear transducer of
+% Nx transducers and dx pitch. Returns a calculated array with transducers
+% on the y-axis and the x-axis being a timme stream. 
+%
+% INPUTS:
+% pressure_mask - Calculated based on the tissue mask, concentrations and wavelengths. 
+% Nx - Number of X Pixels
+% Ny - Number of Y Pixels
+% dx - size of each x pixel in meters
+% dy - size of each y pixel in meters
+%
+% OUTPUTS:
+% sensor_data - array of (num_transducers, num_time). This represents the data stream from the 
+% linear array of transducers. More customization will be added soon to
+% increase/decrease time measurement.
 
-
+% Generates boundary around the grid to prevent wrapping
 PML_size = 20;
-
+% Builds kgrid
 kgrid = kWaveGrid(Nx, dx, Ny, dy);
 
 % define the properties of the propagation medium
@@ -11,9 +27,8 @@ medium.sound_speed = 1540;	% [m/s]
 %medium.alpha_power = 0.6;        % absorption power y (typically 1–2)
 
 
-% create initial pressure distribution using makeDisc
-
-p0 = smooth(plot_map ,true);
+% create initial pressure
+p0 = smooth(pressure_mask ,true);
 % assign to the source structure
 source.p0 = p0;
 
