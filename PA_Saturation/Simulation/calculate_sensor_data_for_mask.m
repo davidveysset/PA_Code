@@ -1,3 +1,23 @@
+%> @file calculate_sensor_data_for_mask.m
+%> @brief Generates sensor data using K-Wave simulation from a pressure mask and linear transducer.
+%> @author Calvin Smith
+%> @date 12-20-24
+%> @details This function uses K-Wave to generate sensor data from a given pressure mask. 
+%> The simulation assumes a linear transducer along the x-axis with `Nx` transducers and a pitch of `dx`. 
+%> The output is a calculated array where:
+%> - The y-axis represents the transducers.
+%> - The x-axis represents a time stream of measurements.
+%>
+%> @param pressure_mask The pressure mask, calculated based on the tissue mask, concentrations, and wavelengths.
+%> @param Nx Number of X pixels (horizontal resolution).
+%> @param Ny Number of Y pixels (vertical resolution).
+%> @param dx Size of each X pixel in meters (transducer pitch).
+%> @param dy Size of each Y pixel in meters.
+%>
+%> @return sensor_data An array of shape (num_transducers, num_time) representing the data stream 
+%> from the linear array of transducers. Additional customization for time measurement is planned for future versions.
+
+
 function sensor_data = calculate_sensor_data_for_mask(pressure_mask,Nx,dx,Ny,dy)
 % DESCRIPTION:
 % K-Wave generates sensor data from the pressure mask along the x-axis with a linear transducer of

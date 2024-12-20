@@ -1,3 +1,25 @@
+%> @file calc_gen_nnls.m
+%> @brief Performs spectral unmixing using non-negative least squares optimization.
+%> @author Calvin Smith
+%> @date 12-20-24
+%> @details This function takes reconstructed pressure data and absorption coefficients to solve 
+%> the equation \f$ P(w,x,y) = \epsilon(w,t) * C(t,x,y) \f$ using a non-negative least squares (NNLS) 
+%> optimization. It minimizes the objective function:
+%> \f$ \text{Argmin} \{ P - EC \} \f$
+%> where:
+%> - \f$ P \f$: Pressure (reconstructed data).
+%> - \f$ E \f$: Absorption coefficients by wavelength and type.
+%> - \f$ C \f$: Concentration.
+%> The function finds the optimal \f$ C(t,x,y) \f$ that fits best to the data.
+%>
+%> @param data Reconstructed data with shape (num_wavelength, Nx, Ny).
+%> @param E A (num_wavelength, num_types) matrix of absorption coefficients. Must match the order in concentrations.
+%> @param num_type Number of types (e.g., biomarkers or tissue components).
+%> @param Nx Number of X pixels.
+%> @param Ny Number of Y pixels.
+%>
+%> @return C_nnls The NNLS solution to \f$ P = EC \f$, with shape (num_type, Nx, Ny).
+
 function C_nnls = calc_gen_nnls(data, E, num_wavelength, num_type, Nx, Ny)
 %DESCRIPTION:
 % Takes in reconstructed data which is pressure maps by wavelength and then

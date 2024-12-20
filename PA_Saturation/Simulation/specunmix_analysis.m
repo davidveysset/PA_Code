@@ -1,3 +1,57 @@
+%> @file specunmix_analysis.m
+%> @brief Analyzes full data (saturations, concentrations, weighted averages) from different wavelength sets.
+%> @author Calvin Smith
+%> @date 12-20-24
+%> @details This function performs analysis on spectral unmixing data, including:
+%> - **Mean Saturation and Concentration**: 
+%>   - Calculates mean and standard deviation for saturation by averaging over masked values (not the entire region for better spatial accuracy).
+%>   - Plots mean saturation and concentration values with error bars, with:
+%>     - X-axis: Noise level.
+%>     - Y-axis: Measured quantity.
+%>   - Generates separate figures for each noise level and unique concentration, with different lines for each wavelength.
+%> - **Weighted Average Analysis**:
+%>   - Similar analysis for weighted averages (w_avg).
+%> - **Difference Calculation**:
+%>   - Computes and plots a bar chart for the difference between mean saturation and concentration values.
+%>
+%> @param specunmix_data Cell array of `specunmix_noise_c_data` for multiple wavelengths. 
+%>        Each `specunmix_noise_c_data` has the structure {n, c, 4}, where each (n, c) contains:
+%>        - `sum_C`: Total concentrations.
+%>        - `saturations_by_type`: Saturations by type.
+%>        - `concentrations_by_type`: Concentrations by type.
+%>        - `w_avg_by_type`: Weighted averages by type.
+%> @param mask Boolean tissue mask of size (Nx, Ny).
+%> @param wavelength_sets Array concatenating wavelength sets (e.g., [750, 850; 770, 780]).
+%> @param concentrations Array of size (unique_c * num_iter, num_types), defining the relative saturations of each type in the generated pressure mask.
+%> @param noise_simple Combined noise levels and noise strength.
+%> @param type_names Cell array of type names (e.g., {'Hb', 'HbO'}). Must match the order in `epsilon` and `concentrations`.
+%> @param Nx Number of X pixels.
+%> @param Ny Number of Y pixels.
+%> @param save_flag Boolean flag indicating whether to save `full_specunmix_analysis_data`.
+%>        Data includes:
+%>        - `saturation_mean_holder`: Mean saturation values.
+%>        - `saturation_std_holder`: Standard deviation of saturation values.
+%>        - `concentration_mean_holder`: Mean concentration values.
+%>        - `concentration_std_holder`: Standard deviation of concentration values.
+%>        - `w_avg_mean_holder`: Mean weighted averages.
+%>        - `w_avg_std_holder`: Standard deviation of weighted averages.
+%>        - `sat_difference_holder`: Difference between mean saturation and concentration values.
+%> @param num_iter Number of iterations for each unique concentration.
+%> @param folder_path Path to the folder for saving analysis files.
+%> @param plot_flag_c Boolean flag to plot mean concentrations with error bars for different wavelengths.
+%> @param plot_flag_s Boolean flag to plot mean saturations with error bars for different wavelengths.
+%> @param plot_flag_w_avg Boolean flag to plot mean weighted averages with error bars for different wavelengths.
+%> @param plot_flag_diff Boolean flag to plot bar charts of the differences for different wavelengths.
+%>
+%> @return full_specunmix_analysis_data Contains:
+%>        - `saturation_mean_holder`: Mean saturation values.
+%>        - `saturation_std_holder`: Standard deviation of saturation values.
+%>        - `concentration_mean_holder`: Mean concentration values.
+%>        - `concentration_std_holder`: Standard deviation of concentration values.
+%>        - `w_avg_mean_holder`: Mean weighted averages.
+%>        - `w_avg_std_holder`: Standard deviation of weighted averages.
+%>        - `sat_difference_holder`: Difference between mean saturation and concentration values.
+
 function [full_specunmix_analysis_data] = specunmix_analysis(specunmix_data, mask, wavelength_sets, concentrations, noise_simple, type_names, Nx ,Ny, ...
     save_flag, num_iter, folder_path, plot_flag_c, plot_flag_s, plot_flag_w_avg, plot_flag_diff)
 % DESCRIPTION:

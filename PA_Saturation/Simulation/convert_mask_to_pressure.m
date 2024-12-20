@@ -1,3 +1,28 @@
+%> @file convert_mask_to_pressure.m
+%> @brief Converts boolean mask, concentration set, and absorption coefficient matrix into pressure masks.
+%> @author Calvin Smith
+%> @date 12-20-24
+%> @details This function calculates pressure masks to be converted into sensor data. 
+%> The pressure is calculated using the formula:
+%> P(w, x, y) = Epsilon(w, t) * C(type, x, y)
+%> where:
+%> - P: Pressure
+%> - Epsilon: Absorption coefficients by wavelength and type
+%> - C: Concentration
+%>
+%> @param mask A boolean mask of size (Nx, Ny) defining the shape of the tissue to simulate.
+%> @param epsilon A (num_wavelength, num_types) matrix of absorption coefficients. Must match the order specified in `concentrations`.
+%> @param wavelengths A 1D array of wavelengths (e.g., [770, 780]). Must have the same size as `epsilon`.
+%> @param concentrations An array of size (unique_c * num_iter, num_types) defining the relative saturations of each type in the generated pressure mask.
+%> @param type_names A cell array of names (e.g., {'Hb', 'HbO'}). The order must match with `epsilon` and `concentrations`.
+%> @param Nx Number of X pixels.
+%> @param Ny Number of Y pixels.
+%> @param plotflag A boolean flag. If true, plots each pressure mask for all num_concentrations and wavelengths. Use only for testing when num_iter = 1.
+%>
+%> @return pressure_mask The calculated pressure using P(w, x, y) = Epsilon(w, t) * C(type, x, y). 
+%> This is used for calculating the sensor data.
+
+
 function [pressure_mask] = convert_mask_to_pressure(mask, epsilon, concentrations, concentration_names, wavelengths, Nx, Ny, plot_flag)
 % DESCRIPTION:
 % Converts boolean mask, concentrations set, and the absorption coefficient

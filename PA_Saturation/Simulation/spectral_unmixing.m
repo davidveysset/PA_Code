@@ -1,3 +1,34 @@
+%> @file spectral_unmixing.m
+%> @brief Analyzes reconstructed pressure data to calculate concentrations, saturations, and weighted averages.
+%> @author Calvin Smith
+%> @date 12-20-24
+%> @details This function takes reconstructed pressure data (maps by wavelength) and performs spectral unmixing. 
+%> Using the equation P(w, x, y) = Epsilon(w, t) * C(t, x, y), it applies `calc_gen_nnls` to perform non-negative 
+%> least squares (NNLS) optimization to minimize Argmin{P - EC}, where:
+%> - P: Reconstructed pressure data.
+%> - Epsilon: Absorption coefficients.
+%> - C: Concentration map.
+%>
+%> Additional Calculations:
+%> - **Sum by Type**:
+%>   - Computes `sum_C` by summing concentrations by type to create a map of size (Nx, Ny).
+%> - **Saturation Maps**:
+%>   - Divides each concentration map by `sum_C` to calculate saturation maps.
+%> - **Weighted Average**:
+%>   - Computes `w_avg_by_type` by weighting each point with `sum_C`, dividing by the scalar sum of `sum_C`, 
+%>     and aggregating the result into a scalar value.
+%>
+%> @param epsilon A (num_wavelength, num_types) matrix of absorption coefficients. Must match the order in `type_names`.
+%> @param recon_data_w Reconstructed data with shape (num_wavelength, Nx, Ny).
+%> @param type_names A cell array of type names (e.g., {'Hb', 'HbO'}). Must match the order in `epsilon`.
+%> @param Nx Number of X pixels (horizontal resolution).
+%> @param Ny Number of Y pixels (vertical resolution).
+%>
+%> @return sum_C A map of size (Nx, Ny) representing summed concentrations by type.
+%> @return saturations_by_type An array of size (num_type, Nx, Ny) containing saturation maps for each type.
+%> @return concentrations_by_type An array of size (num_type, Nx, Ny) containing concentration maps for each type.
+%> @return w_avg_by_type A 1D array of size (num_type) containing the weighted average values for each type.
+
 function [sum_C, saturations_by_type, concentrations_by_type, w_avg_by_type] = spectral_unmixing(epsilon, recon_data_w, ...
     type_names, Nx, Ny)
 % DESCRIPTION:
