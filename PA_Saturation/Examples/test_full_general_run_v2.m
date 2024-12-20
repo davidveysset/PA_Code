@@ -4,7 +4,7 @@
 % Dimensions of the simulated tissue area
 Ny = 200; % Number of Pixels in X-Dir
 Nx = 200; % Numbers of Pixels in Y-Dir
-dx = 5e-6; % Size of x-pixel
+dx = 5e-6; % Size ofx-pixel
 dy = 5e-6; % Size of y-pixel
 
 %Type Names needs to be cell array
@@ -29,8 +29,8 @@ concentrations = create_concentrations(unique_concentrations, num_iter);
 
 %Specify the noise strength and noise levels which allow you to pick a
 %percentage of the noise level. 
-noise_levels = [0,0.05,0.5];
-noise_strength = 70;
+noise_levels = [0.05,0.1,0.5];
+noise_strength = 30;
 
 % IMPORTANT: Plots are not considering num_iter so only use for testing!
 % Creates figures with subplots of the pressure mask for each
