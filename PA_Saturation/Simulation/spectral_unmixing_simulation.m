@@ -159,7 +159,6 @@ for w = 1:num_wavelength
         p_mask = squeeze(pressure_mask(w, c, :,:));
         sensor_data = calculate_sensor_data_for_mask(p_mask, Nx, dx, Ny, dy);
         sensor_data_holder(w,c,:,:) = sensor_data;
-
     end
 end
 

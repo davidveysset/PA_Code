@@ -16,8 +16,8 @@ type_names = {'Hb', 'HbO'};
 % Specify number of iterations to measure each set of concentrations
 % Number of iterations will determine how many runs will be repeated to
 % calculate error bars.
-unique_concentrations = [0.75, 0.25; 0.5, 0.5; 0.25 0.75;];
-num_iter = 3;
+unique_concentrations = [0.80, 0.20];
+num_iter = 20; %DV: not sure what that is
 % Generate sets of unique concentrations with num_iter repeating sets.
 concentrations = create_concentrations(unique_concentrations, num_iter);
 
@@ -35,13 +35,13 @@ noise_strength = 30;
 % IMPORTANT: Plots are not considering num_iter so only use for testing!
 % Creates figures with subplots of the pressure mask for each
 % concentration iteration per wavelength.
-plot_flag_pressures = false;
+plot_flag_pressures = true;
 % Creates figures of reconstructed pressures with noise, for each
 % concentration and wavelength.
-plot_flag_recon = false;
+plot_flag_recon = true;
 % Create a figure with suplots of the unmixed concentrations by type for each
 % nosie level
-plot_flag_concentrations = false;
+plot_flag_concentrations = true;
 %Create a figure with suplots of the unmixe saturations by type for each
 % noise level
 plot_flag_saturations = true;
@@ -76,16 +76,18 @@ epsilon = epsilon_750_850;
 
 specunmix_c_data_750_850 = specunmix_c_data;
 
-%EX: Full Run for 770-780
-wavelengths = [750,850];
-epsilon = epsilon_770_780;
-[specunmix_c_data, ~] = spectral_unmixing_simulation(mask, epsilon, wavelengths, concentrations, ...
-    type_names, noise_levels, noise_strength, Nx, Ny, dx,dy, plot_flag_pressures, plot_flag_recon, plot_flag_concentrations, plot_flag_saturations, save_flag,folder_path);
-
-specunmix_c_data_770_780 = specunmix_c_data;
+% %EX: Full Run for 770-780
+% wavelengths = [750,850];
+% epsilon = epsilon_770_780;
+% [specunmix_c_data, ~] = spectral_unmixing_simulation(mask, epsilon, wavelengths, concentrations, ...
+%     type_names, noise_levels, noise_strength, Nx, Ny, dx,dy, plot_flag_pressures, plot_flag_recon, plot_flag_concentrations, plot_flag_saturations, save_flag,folder_path);
+% 
+% specunmix_c_data_770_780 = specunmix_c_data;
 
 % Combine Them:
-full_specunmix_data = {specunmix_c_data_750_850, specunmix_c_data_770_780};
+%full_specunmix_data = {specunmix_c_data_750_850, specunmix_c_data_770_780};
+full_specunmix_data = {specunmix_c_data_750_850};
+
 
 % IMPORTANT Need the wavelength sets to be combined in the same order.
 
@@ -108,10 +110,10 @@ a_save_flag = true;
 % num_iter. The x-axis is noise-levels and the y-axis is the measure
 % quantity. 
 % The plots for the difference is a bar plot. 
-a_plot_flag_c = false;
-a_plot_flag_s = false;
-a_plot_flag_w_avg = false;
-a_plot_flag_diff = false;
+a_plot_flag_c = true;
+a_plot_flag_s = true;
+a_plot_flag_w_avg = true;
+a_plot_flag_diff = true;
 
 % Analysis function
 [full_specunmix_analysis_data] = specunmix_analysis(full_specunmix_data, mask, wavelength_sets, concentrations, noise_simple, type_names, Nx ,Ny, ...

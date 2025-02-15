@@ -16,8 +16,8 @@ type_names = {'Hb', 'HbO'};
 % Specify number of iterations to measure each set of concentrations
 % Number of iterations will determine how many runs will be repeated to
 % calculate error bars.
-unique_concentrations = [0.75, 0.25; 0.5, 0.5; 0.25 0.75;];
-num_iter = 3;
+unique_concentrations = [0.65, 0.35];
+num_iter = 10; 
 % Generate sets of unique concentrations with num_iter repeating sets.
 concentrations = create_concentrations(unique_concentrations, num_iter);
 
@@ -29,8 +29,8 @@ concentrations = create_concentrations(unique_concentrations, num_iter);
 
 %Specify the noise strength and noise levels which allow you to pick a
 %percentage of the noise level. 
-noise_levels = [0.05,0.1,0.5];
-noise_strength = 30;
+noise_levels = [0,0.5,1]; %always have first level at 0 to compute SNR
+noise_strength = 50;
 
 % IMPORTANT: Plots are not considering num_iter so only use for testing!
 % Creates figures with subplots of the pressure mask for each
@@ -44,7 +44,7 @@ plot_flag_recon = false;
 plot_flag_concentrations = false;
 %Create a figure with suplots of the unmixe saturations by type for each
 % noise level
-plot_flag_saturations = true;
+plot_flag_saturations = false;
 
 %saves specunmix_c_data
 % structure of specunmix_c_data:
@@ -57,42 +57,55 @@ save_flag = true;
 folder_path = '/Users/davidveysset/Library/CloudStorage/OneDrive-MassGeneralBrigham/A_PROJECTS/03_PAM/Matlab/PAT/Simulations results/';
 
 
-
 % Specific PARAMS
 %Specify the wavelengths.
 %IMPORTANT: The epsilon values, must match with the order of the
 %wavelengths and the types. 
 
-
 epsilon_770_780 = [1361 636; 1075 710]; 
-epsilon_750_850 = [1405,518;691,1050];
+epsilon_750_850 = [1405,518; 691,1050];
 epsilon_780_1030 = [1075 710; 1024 206];
 
 %EX: Full Run for 750-850
 wavelengths = [750,850];
 epsilon = epsilon_750_850;
-[specunmix_c_data, ~] = spectral_unmixing_simulation(mask, epsilon, wavelengths, concentrations, ...
+[specunmix_c_data, noisy_sensor_data] = spectral_unmixing_simulation(mask, epsilon, wavelengths, concentrations, ...
     type_names, noise_levels, noise_strength, Nx, Ny, dx,dy, plot_flag_pressures, plot_flag_recon, plot_flag_concentrations, plot_flag_saturations, save_flag,folder_path);
 
 specunmix_c_data_750_850 = specunmix_c_data;
+noisy_sensor_data_750_850 = noisy_sensor_data;
+snr_array_750_850 = snr_compute(noisy_sensor_data, wavelengths, Nx, noise_levels, noise_strength);
 
-%EX: Full Run for 770-780
-wavelengths = [750,850];
-epsilon = epsilon_770_780;
-[specunmix_c_data, ~] = spectral_unmixing_simulation(mask, epsilon, wavelengths, concentrations, ...
+
+% %EX: Full Run for 770-780
+% wavelengths = [750,850];
+% epsilon = epsilon_770_780;
+% [specunmix_c_data, ~] = spectral_unmixing_simulation(mask, epsilon, wavelengths, concentrations, ...
+%     type_names, noise_levels, noise_strength, Nx, Ny, dx,dy, plot_flag_pressures, plot_flag_recon, plot_flag_concentrations, plot_flag_saturations, save_flag,folder_path);
+% 
+% specunmix_c_data_770_780 = specunmix_c_data;
+
+%EX: Full Run for 780-1030
+wavelengths = [780,1030];
+epsilon = epsilon_780_1030;
+[specunmix_c_data, noisy_sensor_data] = spectral_unmixing_simulation(mask, epsilon, wavelengths, concentrations, ...
     type_names, noise_levels, noise_strength, Nx, Ny, dx,dy, plot_flag_pressures, plot_flag_recon, plot_flag_concentrations, plot_flag_saturations, save_flag,folder_path);
 
-specunmix_c_data_770_780 = specunmix_c_data;
+specunmix_c_data_780_1030 = specunmix_c_data;
+noisy_sensor_data_780_1030 = noisy_sensor_data;
+snr_array_780_1030 = snr_compute(noisy_sensor_data, wavelengths, Nx, noise_levels, noise_strength);
 
 % Combine Them:
-full_specunmix_data = {specunmix_c_data_750_850, specunmix_c_data_770_780};
+%full_specunmix_data = {specunmix_c_data_750_850, specunmix_c_data_770_780};
+full_specunmix_data = {specunmix_c_data_750_850, specunmix_c_data_780_1030};
+full_snr_data = {snr_array_750_850,snr_array_780_1030};
 
 % IMPORTANT Need the wavelength sets to be combined in the same order.
 
 %Analysis PARAMS
 
 % Need to concat the different wavelengths you are analyzing together
-wavelength_sets = [750,850; 770, 780];
+wavelength_sets = [750, 850; 780, 1030];
 
 %This is just a convenient book-keeping
 noise_simple = noise_strength*noise_levels;
@@ -109,10 +122,49 @@ a_save_flag = true;
 % quantity. 
 % The plots for the difference is a bar plot. 
 a_plot_flag_c = false;
-a_plot_flag_s = false;
+a_plot_flag_s = true;
 a_plot_flag_w_avg = false;
 a_plot_flag_diff = false;
 
 % Analysis function
-[full_specunmix_analysis_data] = specunmix_analysis(full_specunmix_data, mask, wavelength_sets, concentrations, noise_simple, type_names, Nx ,Ny, ...
+ mask_analysis = zeros(200,200);
+ mask_analysis = mask_analysis + makeDisc(200,200, 100, 100, 3);
+[full_specunmix_analysis_data, saturation_mean_holder, saturation_std_holder] = specunmix_analysis_saturation_specific(full_specunmix_data, mask_analysis, wavelength_sets, concentrations, noise_simple, type_names, Nx ,Ny, ...
     a_save_flag, num_iter, folder_path, a_plot_flag_c, a_plot_flag_s, a_plot_flag_w_avg, a_plot_flag_diff);
+
+
+
+num_wavelength_sets = length(full_specunmix_data);
+num_type = size(concentrations,2);
+num_concentration = size(concentrations,1); 
+num_c_unique = num_concentration/num_iter;
+colors = lines(num_wavelength_sets); % Generate distinct colors for each wavelength set
+num_noise = length(noise_levels);
+
+
+if a_plot_flag_s
+for t = 1:num_type
+    for c = 1:num_c_unique
+        figure;
+        hold on;
+
+        for w = 1:num_wavelength_sets
+            sat_mean = squeeze(saturation_mean_holder(w,:,c,t));
+            sat_std = squeeze(saturation_std_holder(w,:,c,t));
+            h = plot( sat_mean, '-', 'LineWidth', 2, 'Color', colors(w, :));
+            snr_x_axis = full_snr_data[
+            errorbar(sat_mean, sat_std, 'LineStyle', 'none', 'LineWidth', 1.5, 'Color', colors(w, :), 'DisplayName', num2str(wavelength_sets(w, :)));
+        end
+
+        title(sprintf('%s Saturation Averages for c = %d', type_names{t}, c), 'Interpreter', 'none');
+        legend('show', 'Location', 'best', 'FontSize', 14);
+        xlabel('Noise Level');
+        ylabel('Saturation Mean');
+        
+        set(gca, 'FontSize',14)
+        xticks(1:num_noise);
+        xticklabels(arrayfun(@num2str, noise_simple, 'UniformOutput', false));
+        grid on;
+    end
+end
+end
